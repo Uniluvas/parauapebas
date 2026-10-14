@@ -340,16 +340,32 @@ footer a{transition:color .2s}footer a:hover{color:#fff}
 @media(max-width:760px){.gm-pgrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.gm-pgrid{grid-template-columns:1fr}}
 </style>
+<style id="v22css">
+/* Faixa de normas em movimento */
+.normband{background:var(--navy-900);overflow:hidden;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07)}
+.normband__track{display:flex;white-space:nowrap;width:max-content;animation:marq 42s linear infinite}
+.normband:hover .normband__track{animation-play-state:paused}
+.normband span{padding:13px 30px;display:inline-flex;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:#aebbd2}
+.normband span b{color:var(--yellow);font-weight:700}
+.normband span::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--yellow);opacity:.7}
+@media (prefers-reduced-motion:reduce){.normband__track{animation:none}}
+/* Brilho que varre a capa do portal no hover */
+.gitem .card__media::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(115deg,transparent 32%,rgba(242,204,62,.28) 50%,transparent 68%);transform:translateX(-130%)}
+.gitem:hover .card__media::before,.gitem:focus-visible .card__media::before{animation:gsheen .85s var(--ease) 1}
+@keyframes gsheen{from{transform:translateX(-130%)}to{transform:translateX(130%)}}
+.gitem:hover{transform:translateY(-10px)}
+@media (prefers-reduced-motion:reduce){.gitem:hover .card__media::before{animation:none}}
+</style>
 </head>
 <body>
 <div id="prog"></div>
-<div class="concept" title="Conceito para aprovação">CONCEITO v0.21</div>
+<div class="concept" title="Conceito para aprovação">CONCEITO v0.22</div>
 <div class="ticker" aria-hidden="true"><div class="ticker__track" id="tk"></div></div>
 
 <header id="hdr"><nav class="nav">
   <a class="brand" href="#top" aria-label="Uniluvas"><img data-img="logo_white" alt="Uniluvas — Luvas Especiais"></a>
   <ul class="menu" id="menu">
-    <li><a href="#novidades">Novidades</a></li><li><a href="#linhas">Linhas</a></li><li><a href="#produtos">Produtos</a></li>
+    <li><a href="#novidades">Novidades</a></li><li><a href="#produtos">Produtos</a></li>
     <li><a href="#blog">Blog</a></li><li><a href="#catalogos">Catálogo</a></li>
     <li><a href="#sobre">A Loja</a></li><li><a href="#contato">Contato</a></li>
   </ul>
@@ -366,7 +382,7 @@ footer a{transition:color .2s}footer a:hover{color:#fff}
       <p class="lead rise d3">EPIs de alta performance direto da fábrica. Luvas e vestimentas especiais — anticorte, térmica, química, solda e elétrica — feitas para proteger quem enfrenta o risco todos os dias.</p>
       <div class="hero__cta rise d4">
         <a class="btn btn-primary" href="https://wa.me/5594991286367" target="_blank" rel="noopener">Falar no WhatsApp</a>
-        <a class="btn btn-ghost" href="#linhas">Ver as linhas</a>
+        <a class="btn btn-ghost" href="#produtos">Ver produtos</a>
       </div>
       <div class="hero__meta rise d5">
         <div><b>Desde 2012</b><small>Fabricante de EPIs</small></div>
@@ -410,26 +426,7 @@ footer a{transition:color .2s}footer a:hover{color:#fff}
   </div>
 </div></section>
 
-<section id="linhas" style="background:linear-gradient(180deg,#fff,var(--paper))"><div class="wrap">
-  <div class="sec-head reveal"><div><span class="eyebrow">Proteção certificada</span><h2 style="margin-top:14px">Nossas linhas de proteção</h2>
-    <p>Do corte extremo ao arco elétrico — cada linha resolve um risco específico, com CA válido e normas internacionais.</p></div></div>
-  <div class="grid g4 stagger">
-    <div class="line linecard" tabindex="0" role="button" data-key="vulca" aria-label="Ver ficha técnica da Linha Vulca"><div class="line__media line__media--ph"><img data-img="line_vulca" alt="Linha Vulca — luva Max Defender anticorte"><div class="stripe"></div></div>
-      <div class="line__body"><h3>Linha Vulca</h3><p>Corte extremo em fios DuPont™ Kevlar®. Luvas e vestimentas para mineração, vulcanização e manuseio de facas.</p>
-      <div class="tags"><span class="tag">EN 388 · 4544F</span><span class="tag">CA 41730</span></div><button class="readmore" type="button">Ficha técnica</button></div></div>
-    <div class="line linecard" tabindex="0" role="button" data-key="mec" aria-label="Ver ficha técnica da Linha Mecânica"><div class="line__media line__media--ph"><img data-img="line_mec" alt="Linha Mecânica"><div class="stripe"></div></div>
-      <div class="line__body"><h3>Mecânica · Química · Térmica</h3><p>Total Power, Max Power, Master Cut Flex, Max Grip e Power Chemical — destreza e proteção no dia a dia industrial.</p>
-      <div class="tags"><span class="tag">Anticorte</span><span class="tag">Antiquímico</span></div><button class="readmore" type="button">Ficha técnica</button></div></div>
-    <div class="line linecard" tabindex="0" role="button" data-key="solda" aria-label="Ver ficha técnica da Linha Solda"><div class="line__media line__media--ph"><img data-img="line_solda" alt="Linha Solda"><div class="stripe"></div></div>
-      <div class="line__body"><h3>Linha Solda</h3><p>Max Solder, Extreme Solder e vestimentas para solda — proteção térmica em fundição e caldeiraria.</p>
-      <div class="tags"><span class="tag">ISO 11611</span><span class="tag">Térmica</span></div><button class="readmore" type="button">Ficha técnica</button></div></div>
-    <div class="line linecard" tabindex="0" role="button" data-key="eletrica" aria-label="Ver ficha técnica da Linha Elétrica"><div class="line__media line__media--ph"><img data-img="line_eletrica" alt="Linha Elétrica"><div class="stripe"></div></div>
-      <div class="line__body"><h3>Linha Elétrica</h3><p>Arctátil, Arctátil Cobertura e Clean Black — proteção contra arco elétrico com destreza e conforto.</p>
-      <div class="tags"><span class="tag">Arco elétrico</span><span class="tag">Subluva</span></div><button class="readmore" type="button">Ficha técnica</button></div></div>
-  </div>
-</div></section>
-
-
+<div class="normband" aria-hidden="true"><div class="normband__track"><span><b>EN 388</b> · Riscos mecânicos</span><span><b>ANSI/ISEA 105</b> · Nível de corte</span><span><b>EN 407</b> · Calor e fogo</span><span><b>ISO 11611</b> · Soldagem</span><span><b>ISO 11612</b> · Calor e chama</span><span><b>EN 374</b> · Agentes químicos</span><span><b>ATPV</b> · Arco elétrico</span><span><b>CA / MTE</b> · Certificado de Aprovação</span><span><b>EN 388</b> · Riscos mecânicos</span><span><b>ANSI/ISEA 105</b> · Nível de corte</span><span><b>EN 407</b> · Calor e fogo</span><span><b>ISO 11611</b> · Soldagem</span><span><b>ISO 11612</b> · Calor e chama</span><span><b>EN 374</b> · Agentes químicos</span><span><b>ATPV</b> · Arco elétrico</span><span><b>CA / MTE</b> · Certificado de Aprovação</span></div></div>
 <section id="produtos" style="background:linear-gradient(180deg,#fff,var(--paper))"><div class="wrap"><div class="sec-head reveal"><div><span class="eyebrow">Catálogo por risco</span><h2 style="margin-top:14px">Escolha pela sua proteção</h2><p>Selecione o risco da sua operação e veja os produtos indicados, com CA e ficha técnica de cada um.</p></div></div><div class="prodtools reveal"><a class="doc-chip cat" href="fichas/Uniluvas_00_Guia_de_Escolha_Rapida.pdf" target="_blank" rel="noopener">Guia de Escolha Rápida</a><a class="doc-chip " href="fichas/Uniluvas_00_Entenda_as_Normas.pdf" target="_blank" rel="noopener">Entenda as Normas</a><a class="doc-chip " href="fichas/Uniluvas_00_Tabela_de_CAs_e_Validades.pdf" target="_blank" rel="noopener">Tabela de CAs e Validades</a><a class="doc-chip " href="fichas/Uniluvas_00_Tamanho_Certo_e_Cuidados.pdf" target="_blank" rel="noopener">Tamanho e Cuidados</a><a class="doc-chip cat" href="fichas/Catalogo_Loja_Parauapebas_v7.1.pdf" target="_blank" rel="noopener">Catálogo completo (PDF)</a></div><div class="grid g2 stagger"><article class="card gitem" tabindex="0" role="button" data-lb="act_mina" data-sel-lines="Vulca,Mecânica" aria-label="Ver produtos: Risco mecânico"><div class="card__media"><img data-img="act_mina" alt=""><span class="chip">Risco mecânico</span><div class="stripe"></div></div><div class="card__body"><h3>Risco mecânico</h3><p>Corte, impacto, perfuração e abrasão — luvas e vestimentas em DuPont™ Kevlar®.</p></div></article><article class="card gitem" tabindex="0" role="button" data-lb="act_solda" data-sel-lines="Solda" aria-label="Ver produtos: Risco térmico"><div class="card__media"><img data-img="act_solda" alt=""><span class="chip">Risco térmico</span><div class="stripe"></div></div><div class="card__body"><h3>Risco térmico</h3><p>Calor, solda e altas temperaturas até 250 °C — fundição, caldeiraria e manutenção.</p></div></article><article class="card gitem" tabindex="0" role="button" data-lb="act_eletrica" data-sel-lines="Elétrica" aria-label="Ver produtos: Risco ao arco elétrico"><div class="card__media"><img data-img="act_eletrica" alt=""><span class="chip">Risco ao arco elétrico</span><div class="stripe"></div></div><div class="card__body"><h3>Risco ao arco elétrico</h3><p>Proteção contra o calor do arco elétrico em painéis e subestações.</p></div></article><article class="card gitem" tabindex="0" role="button" data-lb="act_manut" data-sel-lines="Convencional" aria-label="Ver produtos: Linha convencional"><div class="card__media"><img data-img="act_manut" alt=""><span class="chip">Linha convencional</span><div class="stripe"></div></div><div class="card__body"><h3>Linha convencional</h3><p>Raspa, vaqueta, algodão e uso geral para o dia a dia da operação.</p></div></article></div></div></section>
 <section id="blog" class="blog"><div class="wrap">
   <div class="sec-head reveal"><div><span class="eyebrow">Blog</span><h2 style="margin-top:14px">Dicas & novidades</h2>
@@ -485,11 +482,11 @@ footer a{transition:color .2s}footer a:hover{color:#fff}
 <footer><div class="wrap">
   <div class="foot">
     <div><img data-img="logo_white" alt="Uniluvas"><p class="foot__p">Luvas e vestimentas especiais direto da fábrica. A primeira Loja de Fábrica Uniluvas, em Parauapebas — Pará.</p></div>
-    <div><h4>Navegar</h4><ul><li><a href="#novidades">Novidades</a></li><li><a href="#linhas">Linhas</a></li><li><a href="#produtos">Produtos</a></li><li><a href="#catalogos">Catálogo</a></li></ul></div>
+    <div><h4>Navegar</h4><ul><li><a href="#novidades">Novidades</a></li><li><a href="#produtos">Produtos</a></li><li><a href="#catalogos">Catálogo</a></li></ul></div>
     <div><h4>A Loja</h4><ul><li><a href="#sobre">Sobre nós</a></li><li><a href="https://www.google.com/maps/search/?api=1&query=UNILUVAS+Parauapebas" target="_blank" rel="noopener">Localização</a></li><li><a href="#contato">Horários</a></li></ul></div>
     <div><h4>Fale conosco</h4><ul><li><a href="https://wa.me/5594991286367" target="_blank" rel="noopener">WhatsApp · (94) 99128-6367</a></li><li><a href="https://instagram.com/unluvas_parauapebas" target="_blank" rel="noopener">Instagram</a></li><li><a href="mailto:andrei.costa@uniluvas.com.br">andrei.costa@uniluvas.com.br</a></li></ul></div>
   </div>
-  <div class="foot__bottom"><span>© 2026 UNILUVAS · Luvas Especiais — Parauapebas/PA</span><span>Conceito v0.21</span></div>
+  <div class="foot__bottom"><span>© 2026 UNILUVAS · Luvas Especiais — Parauapebas/PA</span><span>Conceito v0.22</span></div>
 </div></footer>
 
 <div class="modal" id="modal" aria-hidden="true">
@@ -580,7 +577,7 @@ var LINES={
  mec:{t:'Mecânica · Química · Térmica',i:'Riscos combinados — corte, impacto, calor e agentes químicos — em uma única linha.',p:[
   {n:'Total Power',ca:'CA 43954',m:'EN 388 4544FP · EN 407 · ANSI A9 · Tam. 7–12',c:'Cód. Vale 7·13357234 · 8·13296238 · 9·13296237 · 10·13296364'},
   {n:'Light Power',ca:'CA 50848',m:'EN 388 3X43EP · EN 407 · Tam. 7–11',c:'Cód. Vale 7·13400135 · 8·13399457 · 9·13400137 · 10·13402894'},
-  {n:'Max Power',ca:'CA 50850',m:'EN 388 4X44FP · ANSI A9 · Tam. 7–11',c:'Código Vale em desenvolvimento'},
+  
   {n:'Master Cut Flex',ca:'CA 43230',m:'EN 388 4544F · EN 407 · Tam. 7–10',c:'Cód. Vale 7·13136810 · 8·13136813 · 9·13136742 · 10·13136801'},
   {n:'Max Grip',ca:'CA 42621',m:'EN 388 4544F · EN 407 · EN 374 Tipo A · Tam. 7–10',c:'Cód. Vale 7·13093458 · 8·13093446 · 9·13093448 · 10·13093456'},
   {n:'Power Chemical',ca:'CA 51549',m:'EN 388 4344FP · EN 374 · alta destreza',c:'Código Vale em desenvolvimento'}
