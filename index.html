@@ -356,10 +356,17 @@ footer a{transition:color .2s}footer a:hover{color:#fff}
 .gitem:hover{transform:translateY(-10px)}
 @media (prefers-reduced-motion:reduce){.gitem:hover .card__media::before{animation:none}}
 </style>
+<style id="v23css">
+.pcard__act{flex-direction:column}
+.pcard__row{display:flex;gap:8px}
+.pcard__row .pbtn{flex:1;display:inline-flex;align-items:center;justify-content:center}
+.pbtn-share{background:#fff;border-color:var(--line);color:var(--navy);cursor:pointer;font-family:var(--disp);font-weight:700;font-size:12.5px}
+.pbtn-share:hover{border-color:var(--yellow-600);color:var(--yellow-600)}
+</style>
 </head>
 <body>
 <div id="prog"></div>
-<div class="concept" title="Conceito para aprovação">CONCEITO v0.22</div>
+<div class="concept" title="Conceito para aprovação">CONCEITO v0.23</div>
 <div class="ticker" aria-hidden="true"><div class="ticker__track" id="tk"></div></div>
 
 <header id="hdr"><nav class="nav">
@@ -486,7 +493,7 @@ footer a{transition:color .2s}footer a:hover{color:#fff}
     <div><h4>A Loja</h4><ul><li><a href="#sobre">Sobre nós</a></li><li><a href="https://www.google.com/maps/search/?api=1&query=UNILUVAS+Parauapebas" target="_blank" rel="noopener">Localização</a></li><li><a href="#contato">Horários</a></li></ul></div>
     <div><h4>Fale conosco</h4><ul><li><a href="https://wa.me/5594991286367" target="_blank" rel="noopener">WhatsApp · (94) 99128-6367</a></li><li><a href="https://instagram.com/unluvas_parauapebas" target="_blank" rel="noopener">Instagram</a></li><li><a href="mailto:andrei.costa@uniluvas.com.br">andrei.costa@uniluvas.com.br</a></li></ul></div>
   </div>
-  <div class="foot__bottom"><span>© 2026 UNILUVAS · Luvas Especiais — Parauapebas/PA</span><span>Conceito v0.22</span></div>
+  <div class="foot__bottom"><span>© 2026 UNILUVAS · Luvas Especiais — Parauapebas/PA</span><span>Conceito v0.23</span></div>
 </div></footer>
 
 <div class="modal" id="modal" aria-hidden="true">
@@ -667,7 +674,9 @@ function cardHTML(p){
   return '<article class="pcard"><a class="pcard__media" href="'+p.ficha+'" target="_blank" rel="noopener"><img loading="lazy" src="'+IMG[p.id]+'" alt="'+esc(p.name)+'">'+(p.ca?('<span class="pcard__ca">'+p.ca+'</span>'):'')+'</a>'+
     '<div class="pcard__b"><h3>'+esc(p.name)+'</h3>'+d+
     '<div class="pcard__act"><a class="pbtn pbtn-dark" href="'+p.ficha+'" target="_blank" rel="noopener">Ficha técnica</a>'+
-    '<a class="pbtn pbtn-wa" href="'+waLink(p)+'" target="_blank" rel="noopener">WhatsApp</a></div></div></article>';
+    '<div class="pcard__row"><a class="pbtn pbtn-wa" href="'+waLink(p)+'" target="_blank" rel="noopener">WhatsApp</a>'+
+    '<button class="pbtn pbtn-share" type="button" data-share="'+p.id+'"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" style="vertical-align:-2px;margin-right:4px"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M8 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>Compartilhar</button></div>'+
+    '</div></div></article>';
 }
 function apply(){
   var base=PRODUTOS.filter(function(p){
@@ -731,6 +740,15 @@ gmodal.querySelectorAll('[data-gclose]').forEach(function(x){x.addEventListener(
 addEventListener('keydown',function(e){if(e.key==='Escape')closeScenario();});
 var io2=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io2.unobserve(e.target);}})},{threshold:.12});
 document.querySelectorAll('#produtos .reveal,#blog .reveal,#blog .stagger').forEach(function(el){io2.observe(el);});
+
+function shareFicha(id){
+  var p=PRODMAP[id]; if(!p)return;
+  var url; try{url=new URL(p.ficha, location.href).href;}catch(e){url=p.ficha;}
+  var txt='Ficha técnica — '+p.name+(p.ca?(' ('+p.ca+')'):'')+' · Uniluvas Loja de Fábrica, Parauapebas';
+  if(navigator.share){ navigator.share({title:p.name,text:txt,url:url}).catch(function(){}); }
+  else { window.open('https://wa.me/?text='+encodeURIComponent(txt+' '+url),'_blank','noopener'); }
+}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-share]');if(b){e.preventDefault();shareFicha(b.getAttribute('data-share'));}});
 </script>
 </body>
 </html>
