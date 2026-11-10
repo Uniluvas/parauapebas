@@ -63,6 +63,14 @@ a.btn{display:flex;align-items:center;justify-content:center;text-decoration:non
 .tl svg{width:28px;height:28px}.tl.y{background:var(--a);border-color:var(--a)}.tl.n{background:var(--m);border-color:var(--m);color:#fff}
 .stack{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--ln)}.stack i{display:block;height:100%}.lg2{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:13px;color:var(--aco)}.lg2 i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
 .pw{position:relative}.pw input{width:100%;padding-right:96px}.pw button{position:absolute;right:6px;top:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:#031335;font-weight:600;cursor:pointer}
+.inp{width:100%;height:46px;border-radius:12px;border:1px solid var(--ln);padding:0 12px;margin:4px 0 12px;background:#fff;color:var(--m)}textarea.inp{height:auto;padding:10px;line-height:1.4}.lbl{display:block;font-size:13px;font-weight:600;color:var(--aco)}
+.row2{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.row2 .btn{flex:1;min-width:150px}.prev{display:none}
+@media(min-width:900px){header{padding-left:max(16px,calc((100vw - 1100px)/2));padding-right:max(16px,calc((100vw - 1100px)/2))}main,nav{max-width:1100px}main{padding:24px 16px}
+.list{display:grid;grid-template-columns:1fr 1fr;gap:12px}.kpis{grid-template-columns:repeat(4,1fr)}.tiles{grid-template-columns:repeat(4,1fr)}.hero{padding:28px 32px}.hero h2{font-size:26px}
+#sheet{align-items:center}#sheet>div{border-radius:20px;max-width:560px}.car button{width:190px}.car img{height:120px}
+.cli{display:grid;grid-template-columns:1fr 400px;gap:32px;align-items:start}.prev{display:block;position:sticky;top:96px}.phone{width:360px;height:700px;border:10px solid var(--m);border-radius:36px;overflow:hidden;background:#fff;margin:0 auto 10px}.phone iframe{width:100%;height:100%;border:0}}
+#pvw{position:fixed;inset:0;z-index:70;background:rgba(3,19,53,.7);display:flex;align-items:center;justify-content:center}.pvb{background:#fff;width:100%;height:100%;display:flex;flex-direction:column}.pvh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--ln)}.pvh span{display:flex;gap:8px}.pvh .btn{height:40px;min-height:0;padding:0 12px;font-size:14px;margin:0!important}.pvb iframe{flex:1;border:0;width:100%}
+@media(min-width:900px){.pvb{width:440px;height:min(92vh,860px);border-radius:24px;overflow:hidden}}
 .cap{font-size:12px;color:var(--aco);margin-top:14px}
 </style>
 </head>
@@ -93,6 +101,10 @@ var WHATSAPP='5594991286367';
 // Hub: endereço do treinamento e do SIPATMIM (deixe vazio para ocultar o botão do SIPATMIM).
 var LINK_TREINAMENTO='Uniluvas_Entendendo_Normas_2026_Andrei_Costa_motion.html';
 var LINK_SIPATMIM='';
+// Guia do cliente (arquivo irmão) e vendedores que aparecem no guia (login em minúsculas).
+// zap: WhatsApp do vendedor (somente números, com 55); vazio = usa o WhatsApp da loja.
+var LINK_GUIA='guia-uniluvas.html';
+var VENDEDORES={andrei:{nome:'Andrei',zap:''}};
 
 // Firebase do Hub. PRODUÇÃO = mesmo projeto do EPI Manager (o hub só LÊ estoque e preços).
 // Para testar com o projeto uniluvas-teste, troque pelos valores dele
@@ -114,6 +126,7 @@ var CAT=[{"n": "Arctátil", "ca": 44548, "g": "Luvas", "f": "Uniluvas_Arctatil_C
 var MAPA={andrei:'andrei.costa@uniluvas.com.br'};
 var PAPEIS=['Gerente','Operador','Visualizador'];
 var FB=window.FICHAS_BASE||'fichas/';
+var VEND='';
 var papel=null,grupos={},ITENS=CAT.slice(),tab='home',gf='Todos',busca='',DEMO=false;
 function $(i){return document.getElementById(i)}
 function ek(e){return String(e||'').trim().toLowerCase().replace(/\./g,',')}
@@ -162,16 +175,16 @@ if(typeof auth.signInWithEmailAndPassword!=='function'){er.textContent=msgErro({
 bt.disabled=true;bt.textContent='Entrando…';var em=email($('u').value);
 auth.signInWithEmailAndPassword(em,$('p').value).then(function(){return db.ref('papeis/'+ek(em)).once('value')}).then(function(s){var p=s.val();if(PAPEIS.indexOf(p)<0){auth.signOut();throw{m:'Sem acesso. Peça liberação ao Gerente.'}}papel=p;iniciar(em)}).catch(function(e){er.textContent=msgErro(e);bt.disabled=false;bt.textContent='Entrar'})};
 $('out').onclick=function(){auth.signOut().then(function(){location.reload()})};
-function iniciar(em){$('login').classList.add('hide');$('app').classList.remove('hide');$('who').textContent=em.split('@')[0]+' · '+papel;
+function iniciar(em){VEND=em.split('@')[0].toLowerCase();$('login').classList.add('hide');$('app').classList.remove('hide');$('who').textContent=em.split('@')[0]+' · '+papel;
 db.ref('epis').on('value',function(s){montar(s.val());desenhar()},function(){$('v').innerHTML='<div class="card">Não foi possível ler o estoque. Verifique sua permissão.</div>'})}
 auth.onAuthStateChanged(function(u){if(u&&!papel){db.ref('papeis/'+ek(u.email)).once('value').then(function(s){var p=s.val();if(PAPEIS.indexOf(p)>=0){papel=p;iniciar(u.email)}})}});
-var TABS=[['home','Início'],['cat','Catálogo'],['guias','Guias'],['trein','Treinamento'],['sipat','SIPATMIM']];
+var TABS=[['home','Início'],['cli','Enviar ao cliente'],['cat','Catálogo'],['guias','Guias'],['trein','Treinamento'],['sipat','SIPATMIM']];
 function desenhar(){$('tabs').innerHTML=TABS.map(function(t){return'<button class="'+(t[0]===tab?'on':'')+'" onclick="ir(\''+t[0]+'\')">'+t[1]+'</button>'}).join('');
 var h='';
 if(tab==='home'){var rep=TODOS.filter(baixo).sort(function(a,b){return(a.at||0)/(a.mn||1)-(b.at||0)/(b.mn||1)}),tot=TODOS.length,pct=tot?Math.round((tot-rep.length)/tot*100):0,cats={},C=2*Math.PI*40;
 TODOS.forEach(function(p){var c=p.cat||'Outros';cats[c]=(cats[c]||0)+1});
 h='<div class="hero"><svg width="104" height="104" viewBox="0 0 100 100" role="img" aria-label="'+pct+'% do estoque em nível normal"><circle cx="50" cy="50" r="40" fill="none" stroke="#1D3558" stroke-width="12"/><circle cx="50" cy="50" r="40" fill="none" stroke="#F7DB1B" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+(pct/100*C).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 50 50)"/><text x="50" y="56" text-anchor="middle" fill="#fff" font-family="Rubik,sans-serif" font-weight="700" font-size="22">'+pct+'%</text></svg><div><h2>Estoque da loja</h2><p>'+(!tot?'Aguardando dados do estoque':rep.length?rep.length+(rep.length>1?' itens pedem':' item pede')+' reposição':'Tudo em nível normal')+'</p><p style="font-size:12px;margin-top:8px">'+tot+' produtos acompanhados</p></div></div>';
-h+='<h3 class="sec">Atenção agora</h3>'+(rep.length?'<div class="car">'+rep.slice(0,8).map(function(p){var a=p.at||0,m=p.mn||0,x=p._x,src=x.p||p.foto||'';return'<button onclick="abrir('+ITENS.indexOf(x)+')">'+(src?'<img src="'+esc(src)+'" alt="" loading="lazy">':'<div class="nf">Sem foto</div>')+'<div class="t">'+esc(p.n)+'</div><div class="bar r"><i style="width:'+Math.min(100,m?Math.round(a/m*100):0)+'%"></i></div><div class="l" style="margin-top:6px">'+(a<=0?'Zerado':'faltam '+Math.max(0,m-a)+' un.')+'</div></button>'}).join('')+'</div>':'<div class="card">Nenhum item abaixo do mínimo.</div>');
+h+=cardCli();h+='<h3 class="sec">Atenção agora</h3>'+(rep.length?'<div class="car">'+rep.slice(0,8).map(function(p){var a=p.at||0,m=p.mn||0,x=p._x,src=x.p||p.foto||'';return'<button onclick="abrir('+ITENS.indexOf(x)+')">'+(src?'<img src="'+esc(src)+'" alt="" loading="lazy">':'<div class="nf">Sem foto</div>')+'<div class="t">'+esc(p.n)+'</div><div class="bar r"><i style="width:'+Math.min(100,m?Math.round(a/m*100):0)+'%"></i></div><div class="l" style="margin-top:6px">'+(a<=0?'Zerado':'faltam '+Math.max(0,m-a)+' un.')+'</div></button>'}).join('')+'</div>':'<div class="card">Nenhum item abaixo do mínimo.</div>');
 h+='<h3 class="sec">Explorar</h3><div class="tiles">'+'<button class="tl y" onclick="ir(\'cat\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Catálogo</button>'+'<button class="tl n" onclick="ir(\'trein\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z"/></svg>Treinamento</button>'+'<button class="tl w" onclick="ir(\'guias\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></svg>Guias</button>'+'<button class="tl w" onclick="ir(\'sipat\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>SIPATMIM</button>'+'</div>';
 var ck=Object.keys(cats).sort(function(a,b){return cats[b]-cats[a]}),CO=['#F7DB1B','#172C4B','#5A6B85','#AEB9CC','#031335','#D9DEE8','#E2C800'];
 if(ck.length)h+='<h3 class="sec">Variedade por linha</h3><div class="card"><div class="stack">'+ck.map(function(c,i){return'<i style="width:'+(cats[c]/tot*100)+'%;background:'+CO[i%CO.length]+'"></i>'}).join('')+'</div><div class="lg2">'+ck.map(function(c,i){return'<span><i style="background:'+CO[i%CO.length]+'"></i>'+esc(c)+'</span>'}).join('')+'</div></div>';
@@ -181,7 +194,7 @@ h='<input id="q" placeholder="Buscar produto ou CA" value="'+esc(busca)+'" oninp
 if(tab==='guias')h='<div class="list">'+GUIAS.map(function(g){return'<a class="card" style="text-decoration:none;color:inherit" target="_blank" href="'+FB+esc2(g.f)+'"><div class="nm">'+esc(g.n)+'</div><div class="l">Abrir PDF</div></a>'}).join('')+'</div>';
 if(tab==='trein')h='<div class="card"><h3>Entendendo Normas 2026</h3><div class="l" style="margin:6px 0 12px">Treinamento interativo de normas</div><a class="btn" href="'+(window.LINK_TREINAMENTO||'treinamento.html')+'" target="_blank">Abrir treinamento</a></div>';
 if(tab==='sipat')h='<div class="card"><h3>SIPATMIM</h3><div class="l" style="margin:6px 0 12px">Material criado para a atuação na área da Vale durante a SIPAT.</div>'+(window.LINK_SIPATMIM?'<a class="btn" href="'+window.LINK_SIPATMIM+'" target="_blank">Abrir SIPATMIM</a>':'<div class="l">Em breve: o endereço do SIPATMIM será ligado aqui.</div>')+'</div>';
-$('v').innerHTML=h;if(tab==='cat')lista()}
+if(tab==='cli')h=cliHtml();$('v').innerHTML=h;if(tab==='cat')lista();if(tab==='cli')cliInit()}
 function ir(t){tab=t;desenhar()}
 function foto(x,g,c){var s=x.p||(g&&g.foto)||'';return s?'<img class="'+c+'" src="'+esc(s)+'" alt="" loading="lazy">':'<div class="'+c+' nf">Sem foto</div>'}
 function lista(){var q=busca.toLowerCase();var l=ITENS.filter(function(x){return(gf==='Todos'||x.g===gf)&&(!q||x.n.toLowerCase().indexOf(q)>=0||String(x.ca).indexOf(q)>=0)});
@@ -196,8 +209,27 @@ else h+=g.ps.map(function(p){return'<div class="rw '+sitP(p)+'"><span>'+esc(p.n)
 h+='<div class="lg"><span><i style="background:#E3F3EB"></i>Normal</span><span><i style="background:var(--a)"></i>Abaixo do mínimo</span><span><i style="background:#F8DAD7"></i>Crítico ou zerado</span></div>'+r('Preço diretoria',g.pr.dp?brl(g.pr.dp):'—')+r('Preço distribuidora',g.pr.di?brl(g.pr.di):'—')+r('Preço cliente final',g.pr.f?brl(g.pr.f):'—')}
 else h+='<div class="cap">Este produto ainda não tem o mesmo CA cadastrado no EPI Manager.</div>';
 if(x.f)h+='<a class="btn" href="'+FB+esc2(x.f)+'" target="_blank">Abrir ficha técnica (PDF)</a>';
-h+='<button class="btn o" style="width:100%;margin-top:10px" onclick="$(\'sheet\').classList.add(\'hide\')">Fechar</button>';
+if(x.f)h+='<button class="btn" style="width:100%;margin-top:10px;background:var(--m);color:#fff" onclick="enviarProd('+i+')">Enviar este produto ao cliente</button>';h+='<button class="btn o" style="width:100%;margin-top:10px" onclick="$(\'sheet\').classList.add(\'hide\')">Fechar</button>';
 $('sheet').innerHTML='<div>'+h+'</div>';$('sheet').classList.remove('hide')}
+function vend(){var V=window.VENDEDORES||{},v=V[VEND];return(v&&v.nome)||(VEND?VEND.charAt(0).toUpperCase()+VEND.slice(1):'')}
+function linkGuia(f){var u=new URL(window.LINK_GUIA||'guia-uniluvas.html',location.href);if(VEND)u.searchParams.set('v',VEND);if(f)u.searchParams.set('p',f);return u.href}
+function msgCli(f,nome){var n=vend(),sd=(nome?'Olá, '+nome+'!':'Olá!')+(n?' Aqui é '+n+', da Uniluvas.':' Aqui é da Uniluvas.'),p=f?CAT.filter(function(x){return x.f===f})[0]:null;
+return p?sd+' Separei este produto para você: '+p.n+'. Veja os detalhes e a ficha técnica: '+linkGuia(f):sd+' Preparei este guia para ajudar você a escolher a luva certa para o seu trabalho: '+linkGuia('')}
+function cardCli(){return'<div class="card" style="margin-top:14px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="flex:1;min-width:200px"><b>Enviar o guia ao cliente</b><div class="l">Um link para o cliente escolher a luva certa, sem login e sem ver preço ou estoque.</div></div><button class="btn" onclick="ir(\'cli\')">Enviar</button></div>'}
+function cliHtml(){var o='<option value="">Guia completo</option>'+CAT.map(function(x){return'<option value="'+esc(x.f)+'">'+esc(x.n)+'</option>'}).join('');
+return'<div class="cli"><div><h2 class="sec" style="margin-top:0">Enviar ao cliente</h2><p style="color:var(--aco);margin:0 0 14px">O cliente abre o guia no próprio celular, sem login e sem ver preço ou estoque. Você escolhe o que enviar.</p><label class="lbl" for="cq">O que enviar</label><select id="cq" class="inp">'+o+'</select><label class="lbl" for="cn">Nome do cliente (opcional)</label><input id="cn" class="inp" placeholder="Ex.: João"><label class="lbl" for="cz">WhatsApp do cliente (opcional)</label><input id="cz" class="inp" inputmode="tel" placeholder="(94) 9 0000-0000"><label class="lbl" for="cm">Mensagem</label><textarea id="cm" class="inp" rows="5"></textarea><div class="row2"><button class="btn" onclick="cliZap()">Enviar pelo WhatsApp</button><button class="btn o" onclick="cliCopia()">Copiar mensagem</button><button class="btn o" id="cs" onclick="cliShare()">Compartilhar…</button><button class="btn o" onclick="cliVer()">Ver como o cliente vê</button></div><div class="cap" id="cf">Sem número, o WhatsApp abre para você escolher o contato.</div></div><div class="prev"><div class="phone"><iframe id="cp" title="Pré-visualização do guia do cliente"></iframe></div><div class="cap" style="text-align:center">Pré-visualização do que o cliente vê</div></div></div>'}
+var cliEd=false;
+function cliUpd(f){var q=$('cq').value,u=linkGuia(q);if(f||!cliEd)$('cm').value=msgCli(q,$('cn').value.trim());var fr=$('cp');if(fr&&window.matchMedia('(min-width:900px)').matches&&fr.getAttribute('data-u')!==u){fr.setAttribute('data-u',u);fr.src=u}}
+function cliInit(){cliEd=false;$('cq').onchange=function(){cliEd=false;cliUpd(true)};$('cn').oninput=function(){cliUpd(false)};$('cm').oninput=function(){cliEd=true};cliUpd(true)}
+function copiar(t,f){var m=$('cm');function ok(){f.textContent='Mensagem copiada. É só colar no WhatsApp.'}
+function sel(){if(m){m.focus();m.select()}f.textContent='Não foi possível copiar sozinho. A mensagem está selecionada: copie (Ctrl+C ou "Copiar" no celular) e cole no WhatsApp.'}
+function velho(){try{if(m){m.focus();m.select();if(document.execCommand('copy')){ok();return}}}catch(e){}sel()}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,velho)}else velho()}
+function cliCopia(){copiar($('cm').value,$('cf'))}
+function cliShare(){var t=$('cm').value,f=$('cf');if(navigator.share){navigator.share({title:'Guia Uniluvas',text:t}).then(function(){f.textContent='Compartilhado.'},function(e){if(e&&e.name==='AbortError'){f.textContent='Compartilhamento cancelado.';return}copiar(t,f)})}else copiar(t,f)}
+function cliZap(){var z=($('cz').value||'').replace(/\D/g,'');if(z&&z.length<=11)z='55'+z;var w=window.open('https://wa.me/'+z+'?text='+encodeURIComponent($('cm').value),'_blank');if(!w)$('cf').textContent='O navegador bloqueou a abertura do WhatsApp. Toque em "Copiar mensagem" e cole no WhatsApp.'}
+function cliVer(){var u=linkGuia($('cq').value),o=document.createElement('div');o.id='pvw';o.innerHTML='<div class="pvb"><div class="pvh"><b>Como o cliente vê</b><span><a class="btn o" href="'+esc(u)+'" target="_blank" rel="noopener">Nova aba</a><button class="btn" onclick="document.getElementById(\'pvw\').remove()">Fechar</button></span></div><iframe src="'+esc(u)+'" title="Guia do cliente"></iframe></div>';document.body.appendChild(o)}
+function enviarProd(i){var x=ITENS[i];if(!x||!x.f)return;var w=window.open('https://wa.me/?text='+encodeURIComponent(msgCli(x.f,'')),'_blank');if(!w)alert('O navegador bloqueou a abertura do WhatsApp. Abra a aba "Enviar ao cliente" e use "Copiar mensagem".')}
 $('sheet').onclick=function(e){if(e.target===this)this.classList.add('hide')};
 </script>
 </body>
